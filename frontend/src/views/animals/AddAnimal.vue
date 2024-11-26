@@ -85,7 +85,7 @@
               />
             </div>
             <div class="form-group">
-              <select id="sponsor" class="form-control form-control-lg" v-model="group" required>
+              <select id="sponsor" class="form-control form-control-lg" v-model="sponsor" required>
                 <option value>-- SELECIONA PATROCINADOR --</option>
               </select>
             </div>
@@ -127,7 +127,8 @@ export default {
         { types: "sound", url: "" }
       ],
       evaluation: [],
-      comments: []
+      comments: [],
+      sponsor: ""
     };
   },
   computed: {

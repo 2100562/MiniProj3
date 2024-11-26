@@ -19,7 +19,7 @@ export const REMOVE_USER = "removeUser";
 
 // COMMON
 export const SET_MESSAGE = "setMessage";
-
+export const SET_USERS = "setUsers";
 
 
 export const LOGIN = "login";

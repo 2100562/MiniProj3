@@ -1,35 +1,24 @@
-import API_URL from "./config.js";
+import { userService } from "./user.service";
 
 export const sponsorService = {
   async getSponsors(token) {
-    return [];
+    return userService.getUsers(token).then(res => {
+      res.body = res.body.filter(user => user.type === "sponsor");
+      return res;
+    });
   },
 
   async addSponsor(token, payload) {
-    return [];
+    return userService.addUser(token, payload);
   },
 
   async editSponsor(token, payload) {
-    return [];
+    return userService.editUser(token, payload);
   },
 
   async removeSponsor(token, id) {
-    return [];
+    return userService.removeUser(token, id);
   }
-
 };
-
-function handleResponses(code) {
-  let message = "";
-  switch (code) {
-    case 401:
-      message = "Não está autorizado a executar esta ação!";
-      break;
-    default:
-      message = "Mensagem desconhecida";
-      break;
-  }
-  return message;
-}
 
 export default sponsorService;

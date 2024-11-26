@@ -12,7 +12,8 @@ import {
 } from "./sponsor.constants";
 
 const state = {
-  sponsors: []
+  sponsors: [],
+  message: ""
 };
 
 const getters = {

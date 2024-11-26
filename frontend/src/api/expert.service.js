@@ -1,35 +1,24 @@
-import API_URL from "./config.js";
+import { userService } from "./user.service";
 
 export const expertService = {
   async getExperts(token) {
-    return [];
+    return userService.getUsers(token).then(res => {
+      res.body = res.body.filter(user => user.type === "expert");
+      return res;
+    });
   },
 
   async addExpert(token, payload) {
-    return [];
+    return userService.addUser(token, payload);
   },
 
   async editExpert(token, payload) {
-    return [];
+    return userService.editUser(token, payload);
   },
 
   async removeExpert(token, id) {
-    return [];
+    return userService.removeUser(token, id);
   }
-
 };
-
-function handleResponses(code) {
-  let message = "";
-  switch (code) {
-    case 401:
-      message = "Não está autorizado a executar esta ação!";
-      break;
-    default:
-      message = "Mensagem desconhecida";
-      break;
-  }
-  return message;
-}
 
 export default expertService;

@@ -24,6 +24,8 @@
                 <option value>-- SELECIONA TIPO --</option>
                 <option value="admin">ADMINISTRADOR</option>
                 <option value="user">UTILIZADOR NORMAL</option>
+                <option value="sponsor">PATROCINADOR</option>
+                <option value="expert">ESPECIALISTA</option>
               </select>
             </div>
             <div class="form-group">

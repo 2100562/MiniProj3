@@ -41,7 +41,7 @@
             <tbody>
               <tr v-for="user of users" :key="user._id">                
                 <td class="pt-4">{{user.name}}</td>
-                <td class="pt-4">{{user.type==="admin"?"Administrador":"Utilizador normal"}}</td>
+                <td class="pt-4">{{ user.type === "admin" ? "Administrador" : user.type === "user" ? "Utilizador normal" : user.type === "sponsor" ? "Patrocinador" : "Especialista"}}</td>
                 <td class="pt-4">{{formatDate(user.registration_date)}}</td>
                 <td>
                   <router-link
