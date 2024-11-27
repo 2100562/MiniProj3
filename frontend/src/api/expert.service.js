@@ -3,7 +3,7 @@ import { userService } from "./user.service";
 export const expertService = {
   async getExperts(token) {
     return userService.getUsers(token).then(res => {
-      res.body = res.body.filter(user => user.type === "expert");
+      res.body = res.body.filter(user => user.isExpert);
       return res;
     });
   },

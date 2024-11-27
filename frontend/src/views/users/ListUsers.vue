@@ -41,6 +41,8 @@
                   <i class="fas fa-arrow-down" v-else @click="sort()"></i>
                 </th>
                 <th scope="col">TIPO</th>
+                <th scope="col">PATROCINADOR</th>
+                <th scope="col">ESPECIALISTA</th>
                 <th scope="col">DATA DE CRIAÇÃO</th>
                 <th scope="col">AÇÕES</th>
               </tr>
@@ -52,13 +54,11 @@
                   {{
                     user.type === "admin"
                       ? "Administrador"
-                      : user.type === "user"
-                      ? "Utilizador normal"
-                      : user.type === "sponsor"
-                      ? "Patrocinador"
-                      : "Especialista"
+                      : "Utilizador normal"
                   }}
                 </td>
+                <td class="pt-4">{{ user.isSponsor ? "Sim" : "Não"}}</td>
+                <td class="pt-4">{{ user.isExpert ? "Sim" : "Não"}}</td>
                 <td class="pt-4">{{ formatDate(user.registration_date) }}</td>
                 <td>
                   <router-link
@@ -158,6 +158,8 @@ export default {
           <b>Tipo de utilizador:</b> ${
             user.type === "admin" ? "Administrador" : "Utilizador normal"
           } <br>
+          <b>Patrocinador:</b> ${user.isSponsor ? "Sim" : "Não"}<br>
+          <b>Especialista:</b> ${user.isExpert ? "Sim" : "Não"}<br>
           <b>Data de registo:</b> ${this.formatDate(
             user.registration_date
           )} <br>

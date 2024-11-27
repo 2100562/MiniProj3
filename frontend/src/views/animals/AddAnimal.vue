@@ -125,7 +125,7 @@ import { ADD_ANIMAL } from "@/store/animals/animal.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import router from "@/router";
 import { mapGetters } from "vuex";
-import { FETCH_USERS } from "@/store/users/user.constants";
+import { EDIT_USER, FETCH_USERS } from "@/store/users/user.constants";
 
 export default {
   name: "AddAnimal",
@@ -166,11 +166,20 @@ export default {
     },
     add() {
       let payload = this.$data;
+      let user = payload.users.find(u => u._id === payload.sponsor);
+      user.isSponsor = true;
       delete payload.users;
       this.$store.dispatch(`animal/${ADD_ANIMAL}`, payload).then(
         () => {
-          this.$alert(this.getMessage, "Animal adicionado!", "success");
-          router.push({ name: "listAnimals" });
+          this.$store.dispatch(`user/${EDIT_USER}`, user).then(
+            () => {
+              this.$alert(this.getMessage, "Animal adicionado!", "success");
+              router.push({ name: "listAnimals" });
+            },
+            err => {
+              this.$alert(`${err.message}`, "Erro", "error");
+            }
+          );
         },
         err => {
           this.$alert(`${err.message}`, "Erro", "error");

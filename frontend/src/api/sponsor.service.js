@@ -3,7 +3,7 @@ import { userService } from "./user.service";
 export const sponsorService = {
   async getSponsors(token) {
     return userService.getUsers(token).then(res => {
-      res.body = res.body.filter(user => user.type === "sponsor");
+      res.body = res.body.filter(user => user.isSponsor);
       return res;
     });
   },

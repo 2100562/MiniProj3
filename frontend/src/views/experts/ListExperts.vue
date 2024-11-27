@@ -41,7 +41,7 @@
             <tbody>
               <tr v-for="expert of experts" :key="expert._id">
                 <td class="pt-4">{{ expert.name }}</td>
-                <td class="pt-4">{{ expert.city }}</td>
+                <td class="pt-4">{{ expert.location.city }}</td>
                 <td class="pt-4">{{ expert.area }}</td>
                 <td>
                   <router-link

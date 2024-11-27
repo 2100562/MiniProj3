@@ -41,8 +41,10 @@
             <tbody>
               <tr v-for="sponsor of sponsors" :key="sponsor._id">
                 <td class="pt-4">{{ sponsor.name }}</td>
-                <td class="pt-4">{{ sponsor.city }}</td>
-                <td class="pt-4">{{ sponsor.animals }}</td>
+                <td class="pt-4">{{ sponsor.location.city }}</td>
+                <td class="pt-4">
+                  {{ animals.filter(a => a.sponsor === sponsor._id).length }}
+                </td>
                 <td>
                   <router-link
                     :to="{
@@ -83,6 +85,7 @@
 import { FETCH_SPONSORS } from "@/store/sponsors/sponsor.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import { mapGetters } from "vuex";
+import { FETCH_ANIMALS } from "@/store/animals/animal.constants";
 
 export default {
   name: "ManageSponsors",
@@ -91,18 +94,30 @@ export default {
   },
   data: function() {
     return {
+      animals: [],
       sponsors: [],
       sortType: 1
     };
   },
   computed: {
-    ...mapGetters("sponsor", ["getSponsors", "getMessage"])
+    ...mapGetters("sponsor", ["getSponsors", "getMessage"]),
+    ...mapGetters("animal", ["getAnimals", "getMessage"])
   },
   methods: {
     fetchSponsors() {
       this.$store.dispatch(`sponsor/${FETCH_SPONSORS}`).then(
         () => {
           this.sponsors = this.getSponsors;
+        },
+        err => {
+          this.$alert(`${err.message}`, "Erro", "error");
+        }
+      );
+    },
+    fetchAnimals() {
+      this.$store.dispatch(`animal/${FETCH_ANIMALS}`).then(
+        () => {
+          this.animals = this.getAnimals;
         },
         err => {
           this.$alert(`${err.message}`, "Erro", "error");
@@ -121,6 +136,7 @@ export default {
   },
   created() {
     this.fetchSponsors();
+    this.fetchAnimals();
   }
 };
 </script>

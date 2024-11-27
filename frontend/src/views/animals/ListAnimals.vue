@@ -52,7 +52,11 @@
                 <td class="pt-4">{{ animal.group }}</td>
                 <td class="pt-4">{{ animal.level }}</td>
                 <td class="pt-4">
-                  {{ users.find(u => u._id === animal.sponsor).name }}
+                  {{
+                    users.find(u => u._id === animal.sponsor)
+                      ? users.find(u => u._id === animal.sponsor).name
+                      : ""
+                  }}
                 </td>
                 <td>
                   <router-link
