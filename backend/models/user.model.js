@@ -53,7 +53,7 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
-    area: String
+    group: String
 });
 
 userSchema

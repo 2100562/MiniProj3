@@ -7,6 +7,13 @@
         <b-col cols="2"></b-col>
         <b-col>
           <router-link
+            :to="{ name: 'addExpert' }"
+            tag="button"
+            class="btn btn-outline-success mr-2 mt-2"
+          >
+            <i class="fas fa-plus-square"></i> ADICIONAR ESPECIALISTA
+          </router-link>
+          <router-link
             :to="{ name: 'admin' }"
             tag="button"
             class="btn btn-outline-info mr-2 mt-2"
@@ -42,7 +49,7 @@
               <tr v-for="expert of experts" :key="expert._id">
                 <td class="pt-4">{{ expert.name }}</td>
                 <td class="pt-4">{{ expert.location.city }}</td>
-                <td class="pt-4">{{ expert.area }}</td>
+                <td class="pt-4">{{ expert.group }}</td>
                 <td>
                   <router-link
                     :to="{

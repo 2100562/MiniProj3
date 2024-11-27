@@ -9,7 +9,7 @@ export const expertService = {
   },
 
   async addExpert(token, payload) {
-    return userService.addUser(token, payload);
+    return userService.editUser(token, payload);
   },
 
   async editExpert(token, payload) {

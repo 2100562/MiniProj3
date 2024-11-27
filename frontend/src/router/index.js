@@ -95,6 +95,11 @@ const routes = [
     component: () => import("@/views/experts/ListExperts.vue")
   },
   {
+    path: "/admin/experts/add",
+    name: "addExpert",
+    component: () => import("@/views/experts/AddExpert.vue")
+  },
+  {
     path: "/profile",
     name: "profile",
     component: () => import("@/views/Profile.vue"),
