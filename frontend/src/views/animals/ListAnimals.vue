@@ -7,13 +7,17 @@
         <b-col cols="2"></b-col>
         <b-col>
           <router-link
-            :to="{name:'addAnimal'}"
+            :to="{ name: 'addAnimal' }"
             tag="button"
             class="btn btn-outline-success mr-2 mt-2"
           >
             <i class="fas fa-plus-square"></i> ADICIONAR ANIMAL
           </router-link>
-          <router-link :to="{name:'admin'}" tag="button" class="btn btn-outline-info mr-2 mt-2">
+          <router-link
+            :to="{ name: 'admin' }"
+            tag="button"
+            class="btn btn-outline-info mr-2 mt-2"
+          >
             <i class="fas fa-bars"></i> MENU PRINCIPAL
           </router-link>
         </b-col>
@@ -29,7 +33,11 @@
               <tr>
                 <th scope="col">
                   NOME
-                  <i class="fas fa-arrow-up" v-if="sortType===1" @click="sort()"></i>
+                  <i
+                    class="fas fa-arrow-up"
+                    v-if="sortType === 1"
+                    @click="sort()"
+                  ></i>
                   <i class="fas fa-arrow-down" v-else @click="sort()"></i>
                 </th>
                 <th scope="col">GRUPO</th>
@@ -40,13 +48,16 @@
             </thead>
             <tbody>
               <tr v-for="animal of animals" :key="animal._id">
-                <td class="pt-4">{{animal.name}}</td>
-                <td class="pt-4">{{animal.group}}</td>
-                <td class="pt-4">{{animal.level}}</td>
-                <td class="pt-4">{{animal.sponsor}}</td>
+                <td class="pt-4">{{ animal.name }}</td>
+                <td class="pt-4">{{ animal.group }}</td>
+                <td class="pt-4">{{ animal.level }}</td>
+                <td class="pt-4">{{ animal.sponsor }}</td>
                 <td>
                   <router-link
-                    :to="{name:'editAnimal', params:{animalId: animal._id}}"
+                    :to="{
+                      name: 'editAnimal',
+                      params: { animalId: animal._id }
+                    }"
                     tag="button"
                     class="btn btn-outline-success mr-2 mt-2"
                   >

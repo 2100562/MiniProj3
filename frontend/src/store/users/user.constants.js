@@ -1,7 +1,7 @@
 // Action types
 export const AUTH_LOGIN = "authLogin";
 export const AUTH_REGISTER = "authRegister";
-export const AUTH_INFO = "authGetInfo"
+export const AUTH_INFO = "authGetInfo";
 
 // ANIMALS
 export const FETCH_ANIMAL = "fetchAnimal";
@@ -20,7 +20,6 @@ export const REMOVE_USER = "removeUser";
 // COMMON
 export const SET_MESSAGE = "setMessage";
 export const SET_USERS = "setUsers";
-
 
 export const LOGIN = "login";
 export const LOGOUT = "logout";

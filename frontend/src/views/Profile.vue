@@ -6,7 +6,11 @@
           <b-col md="6" align="center">
             <b-card-img
               style="width:200px"
-              :src="require(`@/assets/avatars/${this.getUserLevelByPoints(user.gamification.points).avatar}.png`)"
+              :src="
+                require(`@/assets/avatars/${
+                  this.getUserLevelByPoints(user.gamification.points).avatar
+                }.png`)
+              "
               class="rounded-0 mb-2"
             ></b-card-img>
             <br />
@@ -32,7 +36,6 @@
                 7
                 <i class="fas fa-comment fa-lg"></i>
               </small>
-
             </h4>
           </b-col>
           <b-col md="6">
@@ -41,44 +44,65 @@
                 <h5>Dados pessoais</h5>
                 <strong>Nome: </strong>{{ user.name }}
                 <br />
-                <strong>Data de nascimento:</strong> {{ setCurrentDateTime(user.birth_date) }}
+                <strong>Data de nascimento:</strong>
+                {{ setCurrentDateTime(user.birth_date) }}
                 <br />
-                <strong>Cidade:</strong> {{ user.location.city }} | <strong>País:</strong> {{ user.location.country }}
-                <br>
+                <strong>Cidade:</strong> {{ user.location.city }} |
+                <strong>País:</strong> {{ user.location.country }}
+                <br />
                 <strong>Descrição:</strong> {{ user.description }}
                 <br />
                 <br />
                 <h5>Conta</h5>
-                <strong>Data de registo:</strong> {{ setCurrentDateTime(user.registration_date) }}
+                <strong>Data de registo:</strong>
+                {{ setCurrentDateTime(user.registration_date) }}
                 <br />
                 <strong>Username:</strong> {{ user.auth.username }}
                 <br />
                 <strong>Tipo:</strong>
-                {{ user.type === "user" ? "Utilizador normal" : user.type === "sponsor" ? "Patrocinador" : "Administrador"
+                {{
+                  user.type === "user"
+                    ? "Utilizador normal"
+                    : user.type === "sponsor"
+                    ? "Patrocinador"
+                    : "Administrador"
                 }}
                 <br />
                 <br />
                 <h5>Gamificação</h5>
-                <strong>Nível atual:</strong> {{ this.getUserLevelByPoints(user.gamification.points).level }}º
+                <strong>Nível atual:</strong>
+                {{ this.getUserLevelByPoints(user.gamification.points).level }}º
                 ({{ this.getUserLevelByPoints(user.gamification.points).name }})
                 <br />
                 <strong>Pontos:</strong> {{ user.gamification.points }}
                 <br />
                 <strong>Ranking:</strong> 14º
                 <br />
-                <strong>Último quiz completado com sucesso:</strong> {{ +user.gamification.quiz }}º
+                <strong>Último quiz completado com sucesso:</strong>
+                {{ +user.gamification.quiz }}º
                 <br />
                 <br />
-
               </b-card-text>
               <br />
-              <b-button variant="outline-success" class="mr-2 mt-2" @click="editProfileData()">
+              <b-button
+                variant="outline-success"
+                class="mr-2 mt-2"
+                @click="editProfileData()"
+              >
                 <i class="fas fa-user-edit"></i> EDITAR PERFIL
               </b-button>
-              <b-button variant="outline-warning" class="mr-2 mt-2" @click="showRanking()">
+              <b-button
+                variant="outline-warning"
+                class="mr-2 mt-2"
+                @click="showRanking()"
+              >
                 <i class="fas fa-chart-line"></i> VER RANKING
               </b-button>
-              <b-button variant="outline-danger" class="mr-2 mt-2" @click="logout()">
+              <b-button
+                variant="outline-danger"
+                class="mr-2 mt-2"
+                @click="logout()"
+              >
                 <i class="fas fa-sign-out-alt"></i> LOGOUT
               </b-button>
             </b-card-body>
@@ -93,22 +117,26 @@
           <b-col>
             <table class="table table-striped">
               <thead class="thead-dark">
-              <tr>
-                <th scope="col">
-                  NOME
-                  <i class="fas fa-arrow-up" v-if="sortType===1" @click="sort()"></i>
-                  <i class="fas fa-arrow-down" v-else @click="sort()"></i>
-                </th>
-                <th scope="col">GRUPO</th>
-                <th scope="col">NÍVEL</th>
-              </tr>
+                <tr>
+                  <th scope="col">
+                    NOME
+                    <i
+                      class="fas fa-arrow-up"
+                      v-if="sortType === 1"
+                      @click="sort()"
+                    ></i>
+                    <i class="fas fa-arrow-down" v-else @click="sort()"></i>
+                  </th>
+                  <th scope="col">GRUPO</th>
+                  <th scope="col">NÍVEL</th>
+                </tr>
               </thead>
               <tbody>
-              <tr v-for="animal of animals" :key="animal._id">
-                <td class="pt-4">{{ animal.name }}</td>
-                <td class="pt-4">{{ animal.group }}</td>
-                <td class="pt-4">{{ animal.level }}</td>
-              </tr>
+                <tr v-for="animal of animals" :key="animal._id">
+                  <td class="pt-4">{{ animal.name }}</td>
+                  <td class="pt-4">{{ animal.group }}</td>
+                  <td class="pt-4">{{ animal.level }}</td>
+                </tr>
               </tbody>
             </table>
           </b-col>
@@ -157,7 +185,9 @@ export default {
     },
     setCurrentDateTime(paramDate) {
       const date = new Date(paramDate);
-      return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDay();
+      return (
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDay()
+      );
     },
     showRanking() {
       router.push({ name: "ranking" });

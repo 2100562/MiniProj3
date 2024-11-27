@@ -17,8 +17,7 @@ const state = {
 
 const getters = {
   getExperts: state => state.experts,
-  getExpertById: state => id =>
-    state.experts.find(expert => expert._id === id),
+  getExpertById: state => id => state.experts.find(expert => expert._id === id),
   getMessage: state => state.message
 };
 
