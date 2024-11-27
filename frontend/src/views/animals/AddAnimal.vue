@@ -11,19 +11,19 @@
           <form @submit.prevent="add">
             <div class="form-group">
               <input
-                v-model="name"
-                type="text"
-                class="form-control form-control-lg"
                 id="txtName"
+                v-model="name"
+                class="form-control form-control-lg"
                 placeholder="escreve nome"
                 required
+                type="text"
               />
             </div>
             <div class="form-group">
               <select
                 id="sltGroup"
-                class="form-control form-control-lg"
                 v-model="group"
+                class="form-control form-control-lg"
                 required
               >
                 <option value>-- SELECIONA GRUPO --</option>
@@ -37,76 +37,80 @@
             <div class="form-group">
               <textarea
                 id="txtDescription"
-                class="form-control form-control-lg"
-                placeholder="escreve descrição"
-                cols="30"
-                rows="10"
                 v-model="description"
+                class="form-control form-control-lg"
+                cols="30"
+                placeholder="escreve descrição"
                 required
+                rows="10"
               ></textarea>
             </div>
             <div class="form-group">
               <div class="form-group">
                 <input
+                  id="txtLevel"
                   v-model="level"
-                  type="text"
+                  class="form-control form-control-lg"
+                  max="5"
+                  min="1"
                   onmouseenter="(this.type='number')"
                   onmouseleave="(this.type='text')"
-                  min="1"
-                  max="5"
-                  class="form-control form-control-lg"
-                  id="txtLevel"
                   placeholder="escreve o nível"
                   required
+                  type="text"
                 />
               </div>
             </div>
             <div class="form-group">
               <input
-                v-model="links[0].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtPhoto"
+                v-model="links[0].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para foto"
                 required
+                type="url"
               />
             </div>
             <div class="form-group">
               <input
-                v-model="links[1].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtPhoto"
+                v-model="links[1].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para vídeo"
+                type="url"
               />
             </div>
             <div class="form-group">
               <input
-                v-model="links[2].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtSound"
+                v-model="links[2].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para som"
+                type="url"
               />
             </div>
             <div class="form-group">
               <select
                 id="sponsor"
-                class="form-control form-control-lg"
                 v-model="sponsor"
+                class="form-control form-control-lg"
                 required
               >
                 <option value>-- SELECIONA PATROCINADOR --</option>
+                <option v-for="user of users" :key="user._id" :value="user._id"
+                >{{ user.name }}
+                </option>
               </select>
             </div>
-            <button type="submit" class="btn btn-outline-success btn-lg mr-2">
+            <button class="btn btn-outline-success btn-lg mr-2" type="submit">
               <i class="fas fa-plus-square"></i> ADICIONAR
             </button>
             <router-link
               :to="{ name: 'listAnimals' }"
-              tag="button"
               class="btn btn-outline-danger btn-lg"
-              ><i class="fas fa-window-close"></i> CANCELAR</router-link
+              tag="button"
+            ><i class="fas fa-window-close"></i> CANCELAR
+            </router-link
             >
           </form>
         </b-col>
@@ -121,6 +125,7 @@ import { ADD_ANIMAL } from "@/store/animals/animal.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import router from "@/router";
 import { mapGetters } from "vuex";
+import { FETCH_USERS } from "@/store/users/user.constants";
 
 export default {
   name: "AddAnimal",
@@ -140,15 +145,29 @@ export default {
       ],
       evaluation: [],
       comments: [],
-      sponsor: ""
+      sponsor: "",
+      users: []
     };
   },
   computed: {
-    ...mapGetters("animal", ["getMessage"])
+    ...mapGetters("animal", ["getMessage"]),
+    ...mapGetters("user", ["getUsers", "getMessage"])
   },
   methods: {
+    fetchUsers() {
+      this.$store.dispatch(`user/${FETCH_USERS}`).then(
+        () => {
+          this.users = this.getUsers;
+        },
+        err => {
+          this.$alert(`${err.message}`, "Erro", "error");
+        }
+      );
+    },
     add() {
-      this.$store.dispatch(`animal/${ADD_ANIMAL}`, this.$data).then(
+      let payload = this.$data;
+      delete payload.users;
+      this.$store.dispatch(`animal/${ADD_ANIMAL}`, payload).then(
         () => {
           this.$alert(this.getMessage, "Animal adicionado!", "success");
           router.push({ name: "listAnimals" });
@@ -158,6 +177,9 @@ export default {
         }
       );
     }
+  },
+  created() {
+    this.fetchUsers();
   }
 };
 </script>

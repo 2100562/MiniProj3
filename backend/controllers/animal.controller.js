@@ -29,7 +29,8 @@ exports.create = (req, res) => {
         group: req.body.group,
         description: req.body.description,
         level: req.body.level,
-        links: req.body.links
+        links: req.body.links,
+        sponsor: req.body.sponsor,
     }).save((error, animal) => {
         if (error) throw error;
         let message = AnimalMessages.success.s0;

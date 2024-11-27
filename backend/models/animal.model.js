@@ -29,7 +29,8 @@ const animalSchema = new Schema({
     active: {
         type: Boolean,
         default: true
-    }
+    },
+    sponsor: String
 });
 
 module.exports = global.mongoConnection.model(CONFIG.mongodb.collections.animal, animalSchema);

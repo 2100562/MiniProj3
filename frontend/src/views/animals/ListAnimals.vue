@@ -51,7 +51,9 @@
                 <td class="pt-4">{{ animal.name }}</td>
                 <td class="pt-4">{{ animal.group }}</td>
                 <td class="pt-4">{{ animal.level }}</td>
-                <td class="pt-4">{{ animal.sponsor }}</td>
+                <td class="pt-4">
+                  {{ users.find(u => u._id === animal.sponsor).name }}
+                </td>
                 <td>
                   <router-link
                     :to="{
@@ -92,6 +94,7 @@
 import { FETCH_ANIMALS, REMOVE_ANIMAL } from "@/store/animals/animal.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import { mapGetters } from "vuex";
+import { FETCH_USERS } from "@/store/users/user.constants";
 
 export default {
   name: "ManageAnimals",
@@ -101,13 +104,25 @@ export default {
   data: function() {
     return {
       animals: [],
-      sortType: 1
+      sortType: 1,
+      users: []
     };
   },
   computed: {
-    ...mapGetters("animal", ["getAnimals", "getMessage"])
+    ...mapGetters("animal", ["getAnimals", "getMessage"]),
+    ...mapGetters("user", ["getUsers", "getMessage"])
   },
   methods: {
+    fetchUsers() {
+      this.$store.dispatch(`user/${FETCH_USERS}`).then(
+        () => {
+          this.users = this.getUsers;
+        },
+        err => {
+          this.$alert(`${err.message}`, "Erro", "error");
+        }
+      );
+    },
     fetchAnimals() {
       this.$store.dispatch(`animal/${FETCH_ANIMALS}`).then(
         () => {
@@ -175,6 +190,7 @@ export default {
   },
   created() {
     this.fetchAnimals();
+    this.fetchUsers();
   }
 };
 </script>
