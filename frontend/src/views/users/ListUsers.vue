@@ -9,17 +9,16 @@
         <b-col>
           <router-link
             :to="{ name: 'addUser' }"
-            tag="button"
             class="btn btn-outline-success mr-2 mt-2"
-            ><i class="fas fa-plus-square"></i> ADICIONAR
-            UTILIZADOR</router-link
-          >
+            tag="button"
+            ><i class="fas fa-plus-square"></i> ADICIONAR UTILIZADOR
+          </router-link>
           <router-link
             :to="{ name: 'admin' }"
-            tag="button"
             class="btn btn-outline-info mr-2 mt-2"
-            ><i class="fas fa-bars"></i> MENU PRINCIPAL</router-link
-          >
+            tag="button"
+            ><i class="fas fa-bars"></i> MENU PRINCIPAL
+          </router-link>
         </b-col>
         <b-col cols="1"></b-col>
       </b-row>
@@ -34,11 +33,11 @@
                 <th scope="col">
                   NOME
                   <i
-                    class="fas fa-arrow-up"
                     v-if="sortType === 1"
+                    class="fas fa-arrow-up"
                     @click="sort()"
                   ></i>
-                  <i class="fas fa-arrow-down" v-else @click="sort()"></i>
+                  <i v-else class="fas fa-arrow-down" @click="sort()"></i>
                 </th>
                 <th scope="col">TIPO</th>
                 <th scope="col">PATROCINADOR</th>
@@ -57,27 +56,27 @@
                       : "Utilizador normal"
                   }}
                 </td>
-                <td class="pt-4">{{ user.isSponsor ? "Sim" : "Não"}}</td>
-                <td class="pt-4">{{ user.isExpert ? "Sim" : "Não"}}</td>
+                <td class="pt-4">{{ user.isSponsor ? "Sim" : "Não" }}</td>
+                <td class="pt-4">{{ user.isExpert ? "Sim" : "Não" }}</td>
                 <td class="pt-4">{{ formatDate(user.registration_date) }}</td>
                 <td>
                   <router-link
                     :to="{ name: 'editUser', params: { userId: user._id } }"
+                    class="btn btn-outline-success mr-2"
                     tag="button"
-                    class="btn btn-outline-success mr-2"
-                    ><i class="fas fa-edit"></i> EDITAR</router-link
-                  >
+                    ><i class="fas fa-edit"></i> EDITAR
+                  </router-link>
                   <button
-                    @click="viewUser(user._id)"
-                    type="button"
                     class="btn btn-outline-success mr-2"
+                    type="button"
+                    @click="viewUser(user._id)"
                   >
                     <i class="fas fa-search"></i> VER
                   </button>
                   <button
-                    @click="removeUser(user._id)"
-                    type="button"
                     class="btn btn-outline-danger mr-2 "
+                    type="button"
+                    @click="removeUser(user._id)"
                   >
                     <i class="fas fa-trash-alt"></i> REMOVER
                   </button>
@@ -96,6 +95,7 @@
 import { FETCH_USERS, REMOVE_USER } from "@/store/users/user.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import { mapGetters } from "vuex";
+import { FETCH_ANIMALS } from "@/store/animals/animal.constants";
 
 export default {
   name: "ManageUsers",
@@ -105,18 +105,30 @@ export default {
   data: function() {
     return {
       users: [],
-      sortType: 1
+      sortType: 1,
+      animals: []
     };
   },
   computed: {
     ...mapGetters(["getUserLevelByPoints"]),
-    ...mapGetters("user", ["getUsers", "getMessage"])
+    ...mapGetters("user", ["getUsers", "getMessage"]),
+    ...mapGetters("animal", ["getAnimals", "getMessage", "getAnimalsById"])
   },
   methods: {
     fetchUsers() {
-      this.$store.dispatch(`user/${FETCH_USERS}`).then(
+      return this.$store.dispatch(`user/${FETCH_USERS}`).then(
         () => {
           this.users = this.getUsers;
+        },
+        err => {
+          this.$alert(`${err.message}`, "Erro", "error");
+        }
+      );
+    },
+    fetchAnimals() {
+      this.$store.dispatch(`animal/${FETCH_ANIMALS}`).then(
+        () => {
+          this.animals = this.getAnimals;
         },
         err => {
           this.$alert(`${err.message}`, "Erro", "error");
@@ -148,6 +160,9 @@ export default {
     },
 
     generateTemplate(user) {
+      const _animals = [];
+      _animals.push(this.animals.find(a => a.sponsor === user._id));
+
       return `
           <h5>${user.gamification.points} pontos (${
         this.getUserLevelByPoints(user.gamification.points).name
@@ -159,13 +174,49 @@ export default {
             user.type === "admin" ? "Administrador" : "Utilizador normal"
           } <br>
           <b>Patrocinador:</b> ${user.isSponsor ? "Sim" : "Não"}<br>
-          <b>Especialista:</b> ${user.isExpert ? "Sim" : "Não"}<br>
+          <b>Especialista:</b> ${
+            user.isExpert ? "Sim (" + user.group + ")" : "Não"
+          }<br>
           <b>Data de registo:</b> ${this.formatDate(
             user.registration_date
           )} <br>
           <b>Data de nascimento:</b> ${this.formatDate(user.birth_date)}<br>
           <b>Cidade:</b> ${user.location.city}<br>
-          <b>País:</b> ${user.location.country}
+          <b>País:</b> ${user.location.country}<br>
+          <div v-if="user.type === 'sponsor' && _animals.length > 0">
+            <b-card-body title="ANIMAIS PATROCINADOS" align="center"> </b-card-body>
+            <!--TABLE-->
+            <b-row>
+              <b-col cols="2"></b-col>
+              <b-col>
+                <table class="table table-striped">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">
+                        NOME
+                        <i
+                          class="fas fa-arrow-up"
+                          v-if="sortType === 1"
+                          @click="sort()"
+                        ></i>
+                        <i class="fas fa-arrow-down" v-else @click="sort()"></i>
+                      </th>
+                      <th scope="col">GRUPO</th>
+                      <th scope="col">NÍVEL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="pt-4">${_animals[0].name}</td>
+                      <td class="pt-4">${_animals[0].group}</td>
+                      <td class="pt-4">${_animals[0].level}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </b-col>
+              <b-col cols="2"></b-col>
+            </b-row>
+          </div>
           </p>
         `;
     },
@@ -206,6 +257,7 @@ export default {
   },
   created() {
     this.fetchUsers();
+    this.fetchAnimals();
   }
 };
 </script>
