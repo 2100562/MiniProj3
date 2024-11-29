@@ -10,19 +10,19 @@
           <form @submit.prevent="update">
             <div class="form-group">
               <input
-                v-model="animal.name"
-                type="text"
-                class="form-control form-control-lg"
                 id="txtName"
+                v-model="animal.name"
+                class="form-control form-control-lg"
                 placeholder="escreve nome"
                 required
+                type="text"
               />
             </div>
             <div class="form-group">
               <select
                 id="sltGroup"
-                class="form-control form-control-lg"
                 v-model="animal.group"
+                class="form-control form-control-lg"
               >
                 <option value>-- SELECIONA GRUPO --</option>
                 <option value="anfibio">ANFÍBIO</option>
@@ -35,70 +35,83 @@
             <div class="form-group">
               <textarea
                 id="txtDescription"
-                class="form-control form-control-lg"
-                placeholder="escreve descrição"
-                cols="30"
-                rows="10"
                 v-model="animal.description"
+                class="form-control form-control-lg"
+                cols="30"
+                placeholder="escreve descrição"
                 required
+                rows="10"
               ></textarea>
             </div>
             <div class="form-group">
               <div class="form-group">
                 <input
-                  v-model="animal.level"
-                  type="number"
-                  min="1"
-                  max="5"
-                  class="form-control form-control-lg"
                   id="txtLevel"
+                  v-model="animal.level"
+                  class="form-control form-control-lg"
+                  max="5"
+                  min="1"
                   placeholder="escreve o nível"
                   required
+                  type="number"
                 />
               </div>
             </div>
             <div class="form-group">
               <input
-                v-model="animal.links[0].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtPhoto"
+                v-model="animal.links[0].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para foto"
                 required
+                type="url"
               />
             </div>
             <div class="form-group">
               <input
-                v-model="animal.links[1].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtPhoto"
+                v-model="animal.links[1].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para vídeo"
+                type="url"
               />
             </div>
             <div class="form-group">
               <input
-                v-model="animal.links[2].url"
-                type="url"
-                class="form-control form-control-lg"
                 id="txtSound"
+                v-model="animal.links[2].url"
+                class="form-control form-control-lg"
                 placeholder="escreve link para som"
+                type="url"
               />
+            </div>
+            <div class="form-group">
+              <select
+                id="sponsor"
+                v-model="animal.sponsor"
+                class="form-control form-control-lg"
+                required
+              >
+                <option value>-- SELECIONA PATROCINADOR --</option>
+                <option v-for="user of users" :key="user._id" :value="user._id"
+                  >{{ user.name }}
+                </option>
+              </select>
             </div>
             <button
-              type="button"
               class="btn btn-outline-success btn-lg mr-2"
+              type="button"
               @click="removeComments()"
             >
               <i class="fas fa-edit"></i> REMOVER COMENTÁRIOS
             </button>
-            <button type="submit" class="btn btn-outline-success btn-lg mr-2">
+            <button class="btn btn-outline-success btn-lg mr-2" type="submit">
               <i class="fas fa-edit"></i> ATUALIZAR
             </button>
             <router-link
               :to="{ name: 'listAnimals' }"
-              tag="button"
               class="btn btn-outline-danger btn-lg"
+              tag="button"
             >
               <i class="fas fa-window-close"></i> CANCELAR
             </router-link>
@@ -115,6 +128,7 @@ import { EDIT_ANIMAL } from "@/store/animals/animal.constants";
 import HeaderPage from "@/components/HeaderPage.vue";
 import router from "@/router";
 import { mapGetters } from "vuex";
+import { FETCH_USERS } from "@/store/users/user.constants";
 
 export default {
   name: "EditAnimal",
@@ -123,13 +137,25 @@ export default {
   },
   data: () => {
     return {
-      animal: {}
+      animal: {},
+      users: []
     };
   },
   computed: {
-    ...mapGetters("animal", ["getAnimalsById", "getMessage"])
+    ...mapGetters("animal", ["getAnimalsById", "getMessage"]),
+    ...mapGetters("user", ["getUsers", "getMessage"])
   },
   methods: {
+    fetchUsers() {
+      this.$store.dispatch(`user/${FETCH_USERS}`).then(
+        () => {
+          this.users = this.getUsers;
+        },
+        err => {
+          this.$alert(`${err.message}`, "Erro", "error");
+        }
+      );
+    },
     removeComments() {
       this.animal.comments.length = 0;
       this.$alert(
@@ -151,6 +177,7 @@ export default {
     }
   },
   created() {
+    this.fetchUsers();
     this.animal = this.getAnimalsById(this.$route.params.animalId);
   }
 };

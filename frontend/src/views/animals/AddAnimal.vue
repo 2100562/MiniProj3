@@ -94,9 +94,8 @@
                 id="sponsor"
                 v-model="sponsor"
                 class="form-control form-control-lg"
-                required
               >
-                <option value>-- SELECIONA PATROCINADOR --</option>
+                <option value="null">-- SELECIONA PATROCINADOR --</option>
                 <option v-for="user of users" :key="user._id" :value="user._id"
                 >{{ user.name }}
                 </option>
@@ -145,7 +144,7 @@ export default {
       ],
       evaluation: [],
       comments: [],
-      sponsor: "",
+      sponsor: null,
       users: []
     };
   },
