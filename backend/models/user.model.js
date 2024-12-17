@@ -44,16 +44,7 @@ const userSchema = new Schema({
             type: String,
             default: null
         }
-    },
-    isSponsor: {
-        type: Boolean,
-        default: false
-    },
-    isExpert: {
-        type: Boolean,
-        default: false
-    },
-    group: String
+    }
 });
 
 userSchema
