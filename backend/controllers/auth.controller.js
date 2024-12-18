@@ -1,4 +1,6 @@
 const User = require('../models/user.model');
+const Sponsor = require('../models/sponsor.model');
+const Expert = require('../models/expert.model');
 const {
     validationResult
 } = require('express-validator');
@@ -13,6 +15,24 @@ exports.getInfo = (req, res) => {
     return res.status(message.http).send(message);
 }
 
+function auth(entity, password, req, res) {
+    if (!bcrypt.compareSync(password, entity.auth.password)) return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+
+    let payload = {
+        pk: entity.auth.public_key
+    }
+
+    let options = {
+        expiresIn: CONFIG.auth.expiration_time, issuer: CONFIG.auth.issuer
+    };
+
+    let token = JWT.sign(payload, entity.auth.private_key, options);
+
+    let message = AuthMessages.success.s0;
+    message.body = entity;
+    return res.header("Authorization", token).status(message.http).send(message);
+}
+
 exports.login = (req, res) => {
 
     const errors = validationResult(req).array();
@@ -22,30 +42,34 @@ exports.login = (req, res) => {
     let password = escape(req.body.password);
 
     User.findOne({
-        "auth.username": username
-    }, (error, user) => {
-        if (error) throw error;
+            "auth.username": username
+        }, (error, user) => {
+            if (error) throw error;
 
-        if (!user || !bcrypt.compareSync(password, user.auth.password))
-            return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+            if (user) {
+                return auth(user, password, req, res);
+            } else {
+                Sponsor.findOne({"auth.username": username}, (err, sponsor) => {
+                        if (error) throw error;
 
-        let payload = {
-            pk: user.auth.public_key
+                        if (sponsor) {
+                            return auth(sponsor, password, req, res);
+                        } else {
+                            Expert.findOne({"auth.username": username}, (err, expert) => {
+                                if (error) throw error;
+
+                                if (expert) return auth(expert, password, req, res);
+
+                                return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+                            });
+                        }
+                    }
+                )
+                ;
+            }
         }
-
-        let options = {
-            expiresIn: CONFIG.auth.expiration_time,
-            issuer: CONFIG.auth.issuer
-        };
-
-        let token = JWT.sign(payload, user.auth.private_key, options);
-
-        let message = AuthMessages.success.s0;
-        message.body = user;
-        return res.header("Authorization", token).status(message.http).send(message);
-
-    });
-
+    )
+    ;
 }
 
 exports.checkAuth = (req, res, callback) => {

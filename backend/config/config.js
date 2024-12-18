@@ -1,6 +1,6 @@
 module.exports = {
     mongodb: {
-        uri: 'mongodb://root:root@localhost:27017/',
+        uri: 'mongodb://root:root@localhost:27017/animalec?authSource=admin',
         collections: {
             animal: 'animals',
             question: 'questions',
