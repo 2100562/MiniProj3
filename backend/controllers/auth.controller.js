@@ -16,7 +16,8 @@ exports.getInfo = (req, res) => {
 }
 
 function auth(entity, password, req, res) {
-    if (!bcrypt.compareSync(password, entity.auth.password)) return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+    if (!bcrypt.compareSync(password, entity.auth.password))
+        return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
 
     let payload = {
         pk: entity.auth.public_key
@@ -83,16 +84,50 @@ exports.checkAuth = (req, res, callback) => {
         "auth.public_key": payload.pk
     }, (error, user) => {
         if (error) throw error;
-        if (!user) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
+        if (user) {
 
-        JWT.verify(token, user.auth.private_key, (error) => {
-            if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
+            JWT.verify(token, user.auth.private_key, (error) => {
+                if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
 
-            req.user = user;
-            return callback();
+                req.user = user;
+                return callback();
 
-        });
+            });
+        } else {
+            Sponsor.findOne({
+                "auth.public_key": payload.pk
+            }, (error, sponsor) => {
+                if (error) throw error;
+                if (sponsor) {
 
+                    JWT.verify(token, user.auth.private_key, (error) => {
+                        if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
+
+                        req.user = user;
+                        return callback();
+
+                    });
+                } else {
+                    Expert.findOne({
+                        "auth.public_key": payload.pk
+                    }, (error, expert) => {
+                        if (error) throw error;
+                        if (expert) {
+
+                            JWT.verify(token, user.auth.private_key, (error) => {
+                                if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
+
+                                req.user = user;
+                                return callback();
+
+                            });
+                        } else {
+                            return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
+                        }
+                    });
+                }
+
+            });
+        }
     });
-
-};
+}
