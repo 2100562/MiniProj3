@@ -5,6 +5,7 @@ const {
 const SponsorMessages = require("../messages/sponsor.messages");
 const JWT = require("jsonwebtoken");
 const CONFIG = require("../config/config");
+const ExpertMessages = require("../messages/expert.messages");
 
 exports.get = (req, res) => {
 
@@ -119,6 +120,7 @@ exports.delete = (req, res) => {
     }, (error, result) => {
         if (error) throw error;
         if (result.deletedCount <= 0) return res.status(SponsorMessages.error.e1.http).send(SponsorMessages.error.e1);
+        return res.status(SponsorMessages.success.s3.http).send(SponsorMessages.success.s3);
     });
 
 }

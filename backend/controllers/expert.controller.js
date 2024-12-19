@@ -120,6 +120,7 @@ exports.delete = (req, res) => {
     }, (error, result) => {
         if (error) throw error;
         if (result.deletedCount <= 0) return res.status(ExpertMessages.error.e1.http).send(ExpertMessages.error.e1);
+        return res.status(ExpertMessages.success.s3.http).send(ExpertMessages.success.s3);
     });
 
 }
