@@ -100,10 +100,10 @@ exports.checkAuth = (req, res, callback) => {
                 if (error) throw error;
                 if (sponsor) {
 
-                    JWT.verify(token, user.auth.private_key, (error) => {
+                    JWT.verify(token, sponsor.auth.private_key, (error) => {
                         if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
 
-                        req.user = user;
+                        req.user = sponsor;
                         return callback();
 
                     });
@@ -114,10 +114,10 @@ exports.checkAuth = (req, res, callback) => {
                         if (error) throw error;
                         if (expert) {
 
-                            JWT.verify(token, user.auth.private_key, (error) => {
+                            JWT.verify(token, expert.auth.private_key, (error) => {
                                 if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
 
-                                req.user = user;
+                                req.user = expert;
                                 return callback();
 
                             });
